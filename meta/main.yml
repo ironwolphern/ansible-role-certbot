@@ -1,0 +1,35 @@
+---
+galaxy_info:
+  role_name: certbot
+  author: Fernando Hernandez San Felipe
+  description: Role for deploy and configure certbot
+  company: Orphenix IT
+  issue_tracker_url: https://github.com/ironwolphern/ansible-role-certbot/issues
+  license: license MIT
+  min_ansible_version: "2.9"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+    - name: Fedora
+      versions:
+        - all
+    - name: EL
+      versions:
+        - all
+
+  galaxy_tags:
+    - certbot
+    - letsencrypt
+    - ssl
+    - tls
+    - certificate
+    - security
+    - encryption
+    - https
+    - system
+
+dependencies: []

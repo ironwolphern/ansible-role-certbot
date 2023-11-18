@@ -1,0 +1,19 @@
+---
+# Configuration paths
+certbot__tmp_dir: /tmp/certbot
+
+# DNS provider to use
+certbot__dns_provider: ""
+# The options are: cloudflare, digitalocean, dnsimple, dnsmadeeasy, gehirn, google, linode, luadns, nsone, ovh, rfc2136, route53, sakuracloud
+
+# List of domains to request certificates
+certbot__domains: []
+
+# Token for DNS provider API
+certbot__dns_provider_token: ""
+
+# Path to credentials file for DNS provider
+certbot__dir_credentials: "/etc/letsencrypt/.secrets"
+
+# Debug logs
+certbot__debugger: false

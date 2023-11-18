@@ -1,0 +1,20 @@
+---
+- name: "Install Snap on Debian | Install | {{ _title_pfx }}"
+  delegate_to: "{{ ansible_hostname | default('localhost', true) }}"
+  become: true
+  block:
+    - name: "Refresh apt cache and update all packages | Install Debian | Install | {{ _title_pfx }}"
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: "Install snapd | Install Debian | Install | {{ _title_pfx }}"
+      ansible.builtin.apt:
+        name: snapd
+        state: present
+
+    - name: "Install core snap | Install Debian | Install | {{ _title_pfx }}"
+      community.general.snap:
+        name: core
+        state: present
+        classic: true
+        channel: stable

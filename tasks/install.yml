@@ -1,0 +1,59 @@
+---
+- name: "Install Certbot | Install | {{ _title_pfx }}"
+  delegate_to: "{{ ansible_hostname | default('localhost', true) }}"
+  become: true
+  tags: [install, update]
+  block:
+    - name: "Header | Install | {{ _title_pfx }}"
+      ansible.builtin.debug:
+        msg: "---------------------------------- INSTALL / UPDATE ----------------------------------"
+
+    - name: "Install pre-requirements for install Certbot | Install | {{ _title_pfx }}"
+      when: ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
+      block:
+        - name: "Install Snap on Fedora | Install | {{ _title_pfx }}"
+          ansible.builtin.import_tasks:
+            file: "install_fedora.yml"
+          when: ansible_distribution == 'Fedora'
+
+        - name: "Install Snap on CentOS | Install | {{ _title_pfx }}"
+          ansible.builtin.import_tasks:
+            file: "install_centos.yml"
+          when: ansible_distribution == 'CentOS'
+
+        - name: "Install Snap on Debian | Install | {{ _title_pfx }}"
+          ansible.builtin.import_tasks:
+            file: "install_debian.yml"
+          when: ansible_distribution == 'Debian'
+
+        - name: "Install Snap on Ubuntu | Install | {{ _title_pfx }}"
+          ansible.builtin.debug:
+            msg: "Snap is pre-installed and ready to go on all recent releases of Ubuntu."
+          when: ansible_distribution == 'Ubuntu'
+
+        - name: "Control installed snap | Install | {{ _title_pfx }}"
+          ansible.builtin.set_fact:
+            _install_snap: true
+
+    - name: "Install pre-requirements is not supported | Install | {{ _title_pfx }}"
+      ansible.builtin.fail:
+        msg: "This OS is not supported."
+      when: _install_snap is false
+
+    - name: "Remove old version of Certbot | Install | {{ _title_pfx }}"
+      ansible.builtin.package:
+        name: certbot
+        state: absent
+
+    - name: "Install Certbot | Install | {{ _title_pfx }}"
+      community.general.snap:
+        name: certbot
+        channel: stable
+        classic: true
+        state: latest
+
+    - name: "Create symlink for Certbot | Install | {{ _title_pfx }}"
+      ansible.builtin.file:
+        src: "/snap/bin/certbot"
+        dest: "/usr/bin/certbot"
+        state: link

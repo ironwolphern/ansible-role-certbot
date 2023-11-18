@@ -1,3 +1,0 @@
----
-# Title prefix for role
-_title_pfx: "{{ role_name | d('', true) }}"

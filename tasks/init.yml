@@ -1,6 +1,5 @@
 ---
 - name: "Initialize role | {{ _title_pfx }}"
-  delegate_to: "{{ ansible_hostname | default('localhost', true) }}"
   become: true
   tags: always
   block:
@@ -11,13 +10,17 @@
           - "##                                   CERTBOT ROLE                                   ##"
           - "######################################################################################"
 
+    - name: "Header | Init | {{ _title_pfx }}"
+      ansible.builtin.debug:
+        msg: "---------------------------------- INIT ----------------------------------"
+
     - name: "Ensure tmp directory exists | Init | {{ _title_pfx }}"
       ansible.builtin.file:
         path: "{{ certbot__tmp_dir }}"
         state: directory
         mode: "0755"
 
-    - name: "Check required parameters | Install | {{ _title_pfx }}"
+    - name: "Check required parameters | Deploy | {{ _title_pfx }}"
       ansible.builtin.assert:
         that:
           - "{{ item }} | default('', true) | length > 0"
@@ -25,4 +28,20 @@
         success_msg: "Required parameter '{{ item }}' is ok."
         quiet: true
       loop:
+        - certbot__key_type
+        - certbot__curve
+        - certbot__key_size | string
         - certbot__domains
+        - certbot__email
+        - certbot__server
+
+    - name: "Check required parameters with dns provider | Deploy | {{ _title_pfx }}"
+      ansible.builtin.assert:
+        that:
+          - "{{ item }} | default('', true) | length > 0"
+        fail_msg: "Required parameter '{{ item }}' is not defined."
+        success_msg: "Required parameter '{{ item }}' is ok."
+        quiet: true
+      loop:
+        - certbot__dns_provider_token
+      when: certbot__dns_provider != "" and certbot__dns_provider != "standalone"

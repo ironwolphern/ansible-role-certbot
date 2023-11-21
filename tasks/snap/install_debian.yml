@@ -1,6 +1,5 @@
 ---
 - name: "Install Snap on Debian | Install | {{ _title_pfx }}"
-  delegate_to: "{{ ansible_hostname | default('localhost', true) }}"
   become: true
   block:
     - name: "Refresh apt cache and update all packages | Install Debian | Install | {{ _title_pfx }}"

@@ -1,9 +1,12 @@
 ---
 - name: "Finalize role | {{ _title_pfx }}"
-  delegate_to: "{{ ansible_hostname | default('localhost', true) }}"
   become: true
   tags: always
   block:
+    - name: "Header | Finish | {{ _title_pfx }}"
+      ansible.builtin.debug:
+        msg: "---------------------------------- FINISH ----------------------------------"
+
     - name: "Clean tmp files and directories | Finish | {{ _title_pfx }}"
       ansible.builtin.file:
         path: "{{ certbot__tmp_dir }}"

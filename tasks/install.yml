@@ -1,6 +1,5 @@
 ---
 - name: "Install Certbot | Install | {{ _title_pfx }}"
-  delegate_to: "{{ ansible_hostname | default('localhost', true) }}"
   become: true
   tags: [install, update]
   block:
@@ -13,17 +12,17 @@
       block:
         - name: "Install Snap on Fedora | Install | {{ _title_pfx }}"
           ansible.builtin.import_tasks:
-            file: "install_fedora.yml"
+            file: "snap/install_fedora.yml"
           when: ansible_distribution == 'Fedora'
 
         - name: "Install Snap on CentOS | Install | {{ _title_pfx }}"
           ansible.builtin.import_tasks:
-            file: "install_centos.yml"
+            file: "snap/install_centos.yml"
           when: ansible_distribution == 'CentOS'
 
         - name: "Install Snap on Debian | Install | {{ _title_pfx }}"
           ansible.builtin.import_tasks:
-            file: "install_debian.yml"
+            file: "snap/install_debian.yml"
           when: ansible_distribution == 'Debian'
 
         - name: "Install Snap on Ubuntu | Install | {{ _title_pfx }}"
@@ -50,7 +49,7 @@
         name: certbot
         channel: stable
         classic: true
-        state: latest
+        state: present
 
     - name: "Create symlink for Certbot | Install | {{ _title_pfx }}"
       ansible.builtin.file:

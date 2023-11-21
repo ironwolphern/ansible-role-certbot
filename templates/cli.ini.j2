@@ -1,0 +1,24 @@
+# Use ECC for the private key
+key-type = {{ certbot__key_type }}
+elliptic-curve = {{ certbot__curve }}
+
+# Use a 4096 bit RSA key instead of 2048
+rsa-key-size = {{ certbot__key_size }}
+
+# Uncomment and update to register with the specified e-mail address
+email = {{ certbot__email }}
+
+# Uncomment to use the {{ certbot__dns_provider | default('standalone', true) }} authenticator on port 443
+authenticator = {{ certbot__dns_provider | default('standalone', true) }}
+
+# Uncomment to automatically agree to the terms of service of the ACME server
+agree-tos = {{ certbot__agree_tos }}
+
+# An example of using an alternate ACME server that uses EAB credentials
+server = {{ certbot__server }}
+
+# Path to the certificates and private key
+cert-path = {{ certbot__cert_path }}
+key-path = {{ certbot__key_path }}
+chain-path = {{ certbot__chain_path }}
+fullchain-path = {{ certbot__fullchain_path }}

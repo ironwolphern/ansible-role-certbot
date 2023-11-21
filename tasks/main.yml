@@ -1,6 +1,5 @@
 ---
 - name: "Role for deploy certbot | {{ _title_pfx }}"
-  delegate_to: "{{ ansible_hostname | default('localhost', true) }}"
   become: true
   block:
     - name: "Initialize role | {{ _title_pfx }}"

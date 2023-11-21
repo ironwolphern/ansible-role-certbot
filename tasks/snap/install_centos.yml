@@ -1,6 +1,5 @@
 ---
 - name: "Install Snap on CentOS | Install | {{ _title_pfx }}"
-  delegate_to: "{{ ansible_hostname | default('localhost', true) }}"
   become: true
   block:
     - name: "Install EPEL repository | Install CentOS | Install | {{ _title_pfx }}"

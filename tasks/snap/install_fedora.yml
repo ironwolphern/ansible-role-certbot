@@ -1,6 +1,5 @@
 ---
 - name: "Install Snap on Fedora | Install | {{ _title_pfx }}"
-  delegate_to: "{{ ansible_hostname | default('localhost', true) }}"
   become: true
   block:
     - name: "Install snapd | Install Fedora | Install | {{ _title_pfx }}"

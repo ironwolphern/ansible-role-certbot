@@ -1,0 +1,47 @@
+---
+# Configuration paths
+certbot__tmp_dir: /tmp/certbot
+
+# DNS provider to use
+certbot__dns_provider: ""
+# The options are: standalone, cloudflare, digitalocean, dnsimple, dnsmadeeasy, gehirn, google,
+#                  linode, luadns, nsone, ovh, rfc2136, route53, sakuracloud
+
+# Token for DNS provider API
+certbot__dns_provider_token: ""
+
+# List of domains to request certificates
+certbot__domains: []
+
+# Path to the directory where the certificates and keys will be stored
+certbot__cert_path: /etc/letsencrypt/live
+certbot__key_path: /etc/letsencrypt/live
+certbot__fullchain_path: /etc/letsencrypt/live
+certbot__chain_path: /etc/letsencrypt/live
+
+# Configutation for certificates
+certbot__key_type: ecdsa
+certbot__curve: secp384r1
+certbot__key_size: 4096
+certbot__email: ""
+certbot__agree_tos: true
+certbot__server: https://acme-staging-v02.api.letsencrypt.org/directory #  For testing
+# certbot__server: https://acme-v02.api.letsencrypt.org/directory #  For production
+certbot__tls_selfsigned_csr_country: ES
+certbot__tls_selfsigned_csr_state: Madrid
+certbot__tls_selfsigned_csr_locality: Madrid
+certbot__tls_selfsigned_csr_organization: Example
+certbot__tls_selfsigned_csr_ou: IT
+# Values of the list must be prefixed by their options. (These are email, URI, DNS, RID, IP, dirName, otherName)
+# Example: certbot__tls_selfsigned_csr_sans: [DNS:example.com, DNS:www.example.com]
+certbot__tls_selfsigned_csr_sans: []
+certbot__tls_csr: false
+
+# Path to credentials file for DNS provider
+certbot__dir_credentials: "/etc/letsencrypt/.secrets"
+
+# The number of seconds to wait for DNS to propagate before asking the ACME server to verify the DNS record. (Default: 30)
+certbot__dns_provider_propagation_seconds: 30
+
+# Debug logs
+certbot__debugger: false

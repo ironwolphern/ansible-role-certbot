@@ -1,0 +1,28 @@
+---
+- name: "Role for deploy certbot | {{ _title_pfx }}"
+  become: true
+  block:
+    - name: "Initialize role | {{ _title_pfx }}"
+      ansible.builtin.import_tasks:
+        file: init.yml
+      tags: always
+
+    - name: "Install or Update Cerbot | {{ _title_pfx }}"
+      ansible.builtin.import_tasks:
+        file: install.yml
+      tags: [install, update]
+
+    - name: "Config Cerbot | {{ _title_pfx }}"
+      ansible.builtin.import_tasks:
+        file: config.yml
+      tags: [config, update]
+
+    - name: "Deploy certificates | {{ _title_pfx }}"
+      ansible.builtin.import_tasks:
+        file: deploy.yml
+      tags: [never, deploy]
+
+    - name: "Finalize role | {{ _title_pfx }}"
+      ansible.builtin.import_tasks:
+        file: finish.yml
+      tags: always

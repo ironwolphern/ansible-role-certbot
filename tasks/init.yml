@@ -28,12 +28,7 @@
         success_msg: "Required parameter '{{ item }}' is ok."
         quiet: true
       loop:
-        - certbot__key_type
-        - certbot__curve
-        - certbot__key_size | string
         - certbot__domains
-        - certbot__email
-        - certbot__server
 
     - name: "Check required parameters with dns provider | Deploy | {{ _title_pfx }}"
       ansible.builtin.assert:

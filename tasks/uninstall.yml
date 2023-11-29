@@ -1,0 +1,41 @@
+---
+- name: "Uninstall Certbot | Uninstall | {{ _title_pfx }}"
+  become: true
+  tags: [never, uninstall]
+  block:
+    - name: "Header | Uninstall | {{ _title_pfx }}"
+      ansible.builtin.debug:
+        msg: "---------------------------------- UNINSTALL / REMOVE ----------------------------------"
+
+    - name: "Remove config file | Uninstall | {{ _title_pfx }}"
+      ansible.builtin.file:
+        path: "/etc/letsencrypt/cli.ini"
+        state: absent
+
+    - name: "Uninstall plugin dns provider | Uninstall | {{ _title_pfx }}"
+      when: certbot__dns_provider != "" and certbot__dns_provider != "standalone"
+      block:
+        - name: "Remove credentials file | Uninstall | {{ _title_pfx }}"
+          ansible.builtin.file:
+            path: "{{ certbot__dir_credentials }}/{{ certbot__dns_provider | default('dnsimple', true) }}.ini"
+            state: absent
+
+        - name: "Remove credentials directory | Uninstall | {{ _title_pfx }}"
+          ansible.builtin.file:
+            path: "{{ certbot__dir_credentials }}"
+            state: absent
+
+        - name: "Uninstall plugin dns provider | Uninstall | {{ _title_pfx }}"
+          community.general.snap:
+            name: certbot-dns-{{ certbot__dns_provider | default('dnsimple', true) }}
+            state: absent
+
+    - name: "Uninstall Certbot | Uninstall | {{ _title_pfx }}"
+      ansible.builtin.package:
+        name: certbot
+        state: absent
+
+    - name: "Remove symlink for Certbot | Uninstall | {{ _title_pfx }}"
+      ansible.builtin.file:
+        path: "/usr/bin/certbot"
+        state: absent

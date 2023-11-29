@@ -3,7 +3,7 @@
 certbot__tmp_dir: /tmp/certbot
 
 # DNS provider to use
-certbot__dns_provider: ""
+certbot__dns_provider: standalone
 # The options are: standalone, cloudflare, digitalocean, dnsimple, dnsmadeeasy, gehirn, google,
 #                  linode, luadns, nsone, ovh, rfc2136, route53, sakuracloud
 

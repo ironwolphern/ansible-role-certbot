@@ -3,6 +3,10 @@
   become: true
   tags: [never, deploy]
   block:
+    - name: "Header | Config | {{ _title_pfx }}"
+      ansible.builtin.debug:
+        msg: "---------------------------------- DEPLOY CERTIFICATE ----------------------------------"
+
     - name: "Check if account is registered | Deploy | {{ _title_pfx }}"
       ansible.builtin.stat:
         path: "/etc/letsencrypt/.registered"
@@ -32,9 +36,9 @@
         _domains_cmd: "{{ certbot__domains | map('regex_replace', '^(.*)$', '-d \\1') | join(' ') }}"
 
     - name: "Create (CSR) with private key | Deploy | {{ _title_pfx }}"
-      when: certbot__tls_csr
+      when: certbot__tls_csr and _registered.stat.exists
       block:
-        - name: "Generate a private key | Deploy | {{ _title_pfx }}"
+        - name: "Generate a private key for (CSR) | Deploy | {{ _title_pfx }}"
           community.crypto.openssl_privatekey:
             path: "{{ certbot__key_path }}/privkey.pem"
             type: "{{ certbot__key_type }}"
@@ -57,7 +61,7 @@
             organizational_unit_name: "{{ certbot__tls_selfsigned_csr_ou }}"
             subject_alt_name: "{{ certbot__tls_selfsigned_csr_sans }}"
 
-    - name: "Deploy standalone certificate for domains with challenge http-01 | Deploy | {{ _title_pfx }}"
+    - name: "Deploy standalone certificate for domains with challenge (http-01) | Deploy | {{ _title_pfx }}"
       ansible.builtin.shell:
         cmd: |
           certbot certonly --standalone \
@@ -67,11 +71,11 @@
           --chain-path {{ certbot__chain_path }} \
           -n -q {{ _domains_cmd }}
       register: _standalone
-      when: certbot__dns_provider == "standalone" and _register.rc == 0
+      when: certbot__dns_provider == "standalone" and _registered.stat.exists
       changed_when: _standalone.rc == 0
       failed_when: _standalone.rc != 0
 
-    - name: "Deploy standalone certificate with (CSR) for domains with challenge http-01 | Deploy | {{ _title_pfx }}"
+    - name: "Deploy standalone certificate with (CSR) for domains with challenge (http-01) | Deploy | {{ _title_pfx }}"
       ansible.builtin.shell:
         cmd: |
           certbot certonly --standalone \
@@ -82,11 +86,11 @@
           --chain-path {{ certbot__chain_path }} \
           -n -q {{ _domains_cmd }}
       register: _standalone_csr
-      when: certbot__dns_provider == "standalone" and certbot__tls_csr and _register.rc == 0
+      when: certbot__dns_provider == "standalone" and certbot__tls_csr and _registered.stat.exists
       changed_when: _standalone_csr.rc == 0
       failed_when: _standalone_csr.rc != 0
 
-    - name: "Deploy dns provider certificate for domains with challenge dns-01 | Deploy | {{ _title_pfx }}"
+    - name: "Deploy dns provider certificate for domains with challenge (dns-01) | Deploy | {{ _title_pfx }}"
       ansible.builtin.shell:
         cmd: |
           certbot certonly \
@@ -99,11 +103,11 @@
           --chain-path {{ certbot__chain_path }} \
           -n -q {{ _domains_cmd }}
       register: _dns_provider
-      when: certbot__dns_provider != "" and certbot__dns_provider != "standalone" and _register.rc == 0
+      when: certbot__dns_provider != "" and certbot__dns_provider != "standalone" and _registered.stat.exists
       changed_when: _dns_provider.rc == 0
       failed_when: _dns_provider.rc != 0
 
-    - name: "Deploy dns provider certificate with (CSR) for domains with challenge dns-01 | Deploy | {{ _title_pfx }}"
+    - name: "Deploy dns provider certificate with (CSR) for domains with challenge (dns-01) | Deploy | {{ _title_pfx }}"
       ansible.builtin.shell:
         cmd: |
           certbot certonly \
@@ -117,6 +121,6 @@
           --chain-path {{ certbot__chain_path }} \
           -n -q {{ _domains_cmd }}
       register: _dns_provider_csr
-      when: certbot__dns_provider != "" and certbot__dns_provider != "standalone" and _register.rc == 0 and certbot__tls_csr
+      when: certbot__dns_provider != "" and certbot__dns_provider != "standalone" and _registered.stat.exists and certbot__tls_csr
       changed_when: _dns_provider_csr.rc == 0
       failed_when: _dns_provider_csr.rc != 0

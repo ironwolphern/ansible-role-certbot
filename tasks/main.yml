@@ -22,6 +22,11 @@
         file: deploy.yml
       tags: [never, deploy]
 
+    - name: "Uninstall Cerbot | {{ _title_pfx }}"
+      ansible.builtin.import_tasks:
+        file: uninstall.yml
+      tags: [never, uninstall]
+
     - name: "Finalize role | {{ _title_pfx }}"
       ansible.builtin.import_tasks:
         file: finish.yml

@@ -7,6 +7,13 @@
       ansible.builtin.debug:
         msg: "---------------------------------- UNINSTALL / REMOVE ----------------------------------"
 
+    - name: "Unregister account | Uninstall | {{ _title_pfx }}"
+      ansible.builtin.command:
+        cmd: "certbot unregister -q -n"
+      register: _unregister
+      changed_when: _unregister.rc == 0
+      failed_when: _unregister.rc != 0
+
     - name: "Remove config file | Uninstall | {{ _title_pfx }}"
       ansible.builtin.file:
         path: "/etc/letsencrypt/cli.ini"

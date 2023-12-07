@@ -18,6 +18,7 @@ certbot__cert_path: /etc/letsencrypt/live
 certbot__key_path: /etc/letsencrypt/live
 certbot__fullchain_path: /etc/letsencrypt/live
 certbot__chain_path: /etc/letsencrypt/live
+certbot__archive_path: /etc/letsencrypt/archive
 
 # User and group to run certbot
 certbot__user: root

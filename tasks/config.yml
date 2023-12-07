@@ -22,7 +22,7 @@
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
-        mode: "0640"
+        mode: "0750"
         owner: "{{ certbot__user }}"
         group: "{{ certbot__group }}"
       loop:
@@ -30,6 +30,7 @@
         - "{{ certbot__key_path }}"
         - "{{ certbot__chain_path }}"
         - "{{ certbot__fullchain_path }}"
+        - "{{ certbot__archive_path }}"
 
     - name: "Change group of directory letsencrypt | Config | {{ _title_pfx }}"
       ansible.builtin.file:

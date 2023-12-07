@@ -19,7 +19,7 @@
         state: present
 
     - name: "Start and enable snapd | Install CentOS | Install | {{ _title_pfx }}"
-      ansible.builtin.systemd:
+      ansible.builtin.systemd_service:
         name: snapd.socket
         state: started
         enabled: true

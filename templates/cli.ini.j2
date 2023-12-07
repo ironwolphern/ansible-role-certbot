@@ -8,9 +8,10 @@ rsa-key-size = {{ certbot__key_size }}
 # Uncomment and update to register with the specified e-mail address
 email = {{ certbot__email }}
 
-# Uncomment to use the {{ certbot__dns_provider | default('standalone', true) }} authenticator on port 443
-authenticator = {{ certbot__dns_provider | default('standalone', true) }}
-
+{% if certbot__dns_provider == 'standalone' %}
+# Uncomment to use the standalone authenticator on port 443
+authenticator = standalone
+{% endif %}
 # Uncomment to automatically agree to the terms of service of the ACME server
 agree-tos = {{ certbot__agree_tos }}
 

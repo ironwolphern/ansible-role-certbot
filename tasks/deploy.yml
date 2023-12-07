@@ -35,6 +35,11 @@
       ansible.builtin.set_fact:
         _domains_cmd: "{{ certbot__domains | map('regex_replace', '^(.*)$', '-d \\1') | join(' ') }}"
 
+    - name: "Check if account is registered | Deploy | {{ _title_pfx }}"
+      ansible.builtin.stat:
+        path: "/etc/letsencrypt/.registered"
+      register: _registered
+
     - name: "Create (CSR) with private key | Deploy | {{ _title_pfx }}"
       when: certbot__tls_csr and _registered.stat.exists
       block:
@@ -124,3 +129,12 @@
       when: certbot__dns_provider != "" and certbot__dns_provider != "standalone" and _registered.stat.exists and certbot__tls_csr
       changed_when: _dns_provider_csr.rc == 0
       failed_when: _dns_provider_csr.rc != 0
+
+    - name: "Test automatic certificate renewal | Deploy | {{ _title_pfx }}"
+      ansible.builtin.shell:
+        cmd: |
+          certbot renew --dry-run
+      register: _renew
+      when: (_standalone.rc == 0 or _standalone_csr.rc == 0 or _dns_provider.rc == 0 or _dns_provider_csr.rc == 0) and _registered.stat.exists
+      changed_when: _renew.rc == 0
+      failed_when: _renew.rc != 0

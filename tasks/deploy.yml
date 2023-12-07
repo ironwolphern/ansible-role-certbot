@@ -3,7 +3,7 @@
   become: true
   tags: [never, deploy]
   block:
-    - name: "Header | Config | {{ _title_pfx }}"
+    - name: "Header | Deploy | {{ _title_pfx }}"
       ansible.builtin.debug:
         msg: "---------------------------------- DEPLOY CERTIFICATE ----------------------------------"
 

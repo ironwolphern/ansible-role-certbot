@@ -8,16 +8,11 @@
     - role: ansible-role-certbot
       vars:
         certbot__email: demo@example.local
-        certbot__domains:
-          - example.local
         certbot__dns_provider: standalone
         certbot__server: https://acme-v02.api.letsencrypt.org/directory
 
     - role: ansible-role-certbot
       vars:
-        certbot__email: demo@example.local
         certbot__domains:
           - example.local
-        certbot__dns_provider: standalone
-        certbot__server: https://acme-v02.api.letsencrypt.org/directory
       tags: deploy

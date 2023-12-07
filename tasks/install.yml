@@ -7,16 +7,6 @@
       ansible.builtin.debug:
         msg: "---------------------------------- INSTALL / UPDATE ----------------------------------"
 
-    - name: "Check required parameters | Install | {{ _title_pfx }}"
-      ansible.builtin.assert:
-        that:
-          - "{{ item }} | default('', true) | length > 0"
-        fail_msg: "Required parameter '{{ item }}' is not defined."
-        success_msg: "Required parameter '{{ item }}' is ok."
-        quiet: true
-      loop:
-        - certbot__email
-
     - name: "Install pre-requirements for install Certbot | Install | {{ _title_pfx }}"
       when: ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
       block:

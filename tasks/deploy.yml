@@ -7,10 +7,15 @@
       ansible.builtin.debug:
         msg: "---------------------------------- DEPLOY CERTIFICATE ----------------------------------"
 
-    - name: "Check if account is registered | Deploy | {{ _title_pfx }}"
-      ansible.builtin.stat:
-        path: "/etc/letsencrypt/.registered"
-      register: _registered
+    - name: "Check required parameters | Deploy | {{ _title_pfx }}"
+      ansible.builtin.assert:
+        that:
+          - "{{ item }} | default('', true) | length > 0"
+        fail_msg: "Required parameter '{{ item }}' is not defined."
+        success_msg: "Required parameter '{{ item }}' is ok."
+        quiet: true
+      loop:
+        - certbot__domains
 
     - name: "Register account | Deploy | {{ _title_pfx }}"
       when: not _registered.stat.exists
@@ -27,8 +32,8 @@
             path: "/etc/letsencrypt/.registered"
             state: touch
             mode: "0644"
-            owner: root
-            group: root
+            owner: "{{ certbot__user }}"
+            group: "{{ certbot__group }}"
           when: _register.rc == 0
 
     - name: "Create command-line with domains | Deploy | {{ _title_pfx }}"
@@ -51,8 +56,8 @@
             size: "{{ certbot__key_size }}"
             state: present
             mode: "0640"
-            owner: root
-            group: root
+            owner: "{{ certbot__user }}"
+            group: "{{ certbot__group }}"
 
         - name: "Generate a (CSR) with private key generated | Deploy | {{ _title_pfx }}"
           community.crypto.openssl_csr:
@@ -66,75 +71,98 @@
             organizational_unit_name: "{{ certbot__tls_selfsigned_csr_ou }}"
             subject_alt_name: "{{ certbot__tls_selfsigned_csr_sans }}"
 
-    - name: "Deploy standalone certificate for domains with challenge (http-01) | Deploy | {{ _title_pfx }}"
-      ansible.builtin.shell:
-        cmd: |
-          certbot certonly --standalone \
-          --cert-path {{ certbot__cert_path }} \
-          --key-path {{ certbot__key_path }} \
-          --fullchain-path {{ certbot__fullchain_path }} \
-          --chain-path {{ certbot__chain_path }} \
-          -n -q {{ _domains_cmd }}
-      register: _standalone
-      when: certbot__dns_provider == "standalone" and _registered.stat.exists
-      changed_when: _standalone.rc == 0
-      failed_when: _standalone.rc != 0
+    - name: "Deploy certificate  | Deploy | {{ _title_pfx }}"
+      when: _registered.stat.exists
+      block:
+        - name: "Deploy standalone certificate with challenge (http-01) | Deploy | {{ _title_pfx }}"
+          when: certbot__dns_provider == "standalone"
+          block:
+            - name: "Deploy standalone certificate for domains with challenge (http-01) | Deploy | {{ _title_pfx }}"
+              ansible.builtin.shell:
+                cmd: |
+                  certbot certonly --standalone \
+                  --cert-path {{ certbot__cert_path }} \
+                  --key-path {{ certbot__key_path }} \
+                  --fullchain-path {{ certbot__fullchain_path }} \
+                  --chain-path {{ certbot__chain_path }} \
+                  -n -q {{ _domains_cmd }}
+              register: _standalone
+              when: not certbot__tls_csr
+              changed_when: _standalone.rc == 0
+              failed_when: _standalone.rc != 0
 
-    - name: "Deploy standalone certificate with (CSR) for domains with challenge (http-01) | Deploy | {{ _title_pfx }}"
-      ansible.builtin.shell:
-        cmd: |
-          certbot certonly --standalone \
-          --csr {{ certbot__cert_path }}/csr.pem \
-          --cert-path {{ certbot__cert_path }} \
-          --key-path {{ certbot__key_path }} \
-          --fullchain-path {{ certbot__fullchain_path }} \
-          --chain-path {{ certbot__chain_path }} \
-          -n -q {{ _domains_cmd }}
-      register: _standalone_csr
-      when: certbot__dns_provider == "standalone" and certbot__tls_csr and _registered.stat.exists
-      changed_when: _standalone_csr.rc == 0
-      failed_when: _standalone_csr.rc != 0
+            - name: "Deploy standalone certificate with (CSR) for domains with challenge (http-01) | Deploy | {{ _title_pfx }}"
+              ansible.builtin.shell:
+                cmd: |
+                  certbot certonly --standalone \
+                  --csr {{ certbot__cert_path }}/csr.pem \
+                  --cert-path {{ certbot__cert_path }} \
+                  --key-path {{ certbot__key_path }} \
+                  --fullchain-path {{ certbot__fullchain_path }} \
+                  --chain-path {{ certbot__chain_path }} \
+                  -n -q {{ _domains_cmd }}
+              register: _standalone_csr
+              when: certbot__tls_csr
+              changed_when: _standalone_csr.rc == 0
+              failed_when: _standalone_csr.rc != 0
 
-    - name: "Deploy dns provider certificate for domains with challenge (dns-01) | Deploy | {{ _title_pfx }}"
-      ansible.builtin.shell:
-        cmd: |
-          certbot certonly \
-          --dns-{{ certbot__dns_provider }} \
-          --dns-{{ certbot__dns_provider }}-credentials {{ certbot__dir_credentials }}/{{ certbot__dns_provider }}.ini \
-          --dns-{{ certbot__dns_provider }}-propagation-seconds {{ certbot__dns_provider_propagation_seconds }} \
-          --cert-path {{ certbot__cert_path }} \
-          --key-path {{ certbot__key_path }} \
-          --fullchain-path {{ certbot__fullchain_path }} \
-          --chain-path {{ certbot__chain_path }} \
-          -n -q {{ _domains_cmd }}
-      register: _dns_provider
-      when: certbot__dns_provider != "" and certbot__dns_provider != "standalone" and _registered.stat.exists
-      changed_when: _dns_provider.rc == 0
-      failed_when: _dns_provider.rc != 0
+        - name: "Deploy dns provider certificate with challenge (dns-01) | Deploy | {{ _title_pfx }}"
+          when: certbot__dns_provider != "" and certbot__dns_provider != "standalone"
+          block:
+            - name: "Deploy dns provider certificate for domains with challenge (dns-01) | Deploy | {{ _title_pfx }}"
+              ansible.builtin.shell:
+                cmd: |
+                  certbot certonly \
+                  --dns-{{ certbot__dns_provider }} \
+                  --dns-{{ certbot__dns_provider }}-credentials {{ certbot__dir_credentials }}/{{ certbot__dns_provider }}.ini \
+                  --dns-{{ certbot__dns_provider }}-propagation-seconds {{ certbot__dns_provider_propagation_seconds }} \
+                  --cert-path {{ certbot__cert_path }} \
+                  --key-path {{ certbot__key_path }} \
+                  --fullchain-path {{ certbot__fullchain_path }} \
+                  --chain-path {{ certbot__chain_path }} \
+                  -n -q {{ _domains_cmd }}
+              register: _dns_provider
+              when: not certbot__tls_csr
+              changed_when: _dns_provider.rc == 0
+              failed_when: _dns_provider.rc != 0
 
-    - name: "Deploy dns provider certificate with (CSR) for domains with challenge (dns-01) | Deploy | {{ _title_pfx }}"
-      ansible.builtin.shell:
-        cmd: |
-          certbot certonly \
-          --dns-{{ certbot__dns_provider }} \
-          --dns-{{ certbot__dns_provider }}-credentials {{ certbot__dir_credentials }}/{{ certbot__dns_provider }}.ini \
-          --dns-{{ certbot__dns_provider }}-propagation-seconds {{ certbot__dns_provider_propagation_seconds }} \
-          --csr {{ certbot__cert_path }}/csr.pem \
-          --cert-path {{ certbot__cert_path }} \
-          --key-path {{ certbot__key_path }} \
-          --fullchain-path {{ certbot__fullchain_path }} \
-          --chain-path {{ certbot__chain_path }} \
-          -n -q {{ _domains_cmd }}
-      register: _dns_provider_csr
-      when: certbot__dns_provider != "" and certbot__dns_provider != "standalone" and _registered.stat.exists and certbot__tls_csr
-      changed_when: _dns_provider_csr.rc == 0
-      failed_when: _dns_provider_csr.rc != 0
+            - name: "Deploy dns provider certificate with (CSR) for domains with challenge (dns-01) | Deploy | {{ _title_pfx }}"
+              ansible.builtin.shell:
+                cmd: |
+                  certbot certonly \
+                  --dns-{{ certbot__dns_provider }} \
+                  --dns-{{ certbot__dns_provider }}-credentials {{ certbot__dir_credentials }}/{{ certbot__dns_provider }}.ini \
+                  --dns-{{ certbot__dns_provider }}-propagation-seconds {{ certbot__dns_provider_propagation_seconds }} \
+                  --csr {{ certbot__cert_path }}/csr.pem \
+                  --cert-path {{ certbot__cert_path }} \
+                  --key-path {{ certbot__key_path }} \
+                  --fullchain-path {{ certbot__fullchain_path }} \
+                  --chain-path {{ certbot__chain_path }} \
+                  -n -q {{ _domains_cmd }}
+              register: _dns_provider_csr
+              when: certbot__tls_csr
+              changed_when: _dns_provider_csr.rc == 0
+              failed_when: _dns_provider_csr.rc != 0
+
+        - name: "Deploy certificate is OK | Deploy | {{ _title_pfx }}"
+          ansible.builtin.set_fact:
+            _deploy_ok: true
+
+      rescue:
+        - name: "Account not registered  | Deploy | {{ _title_pfx }}"
+          ansible.builtin.debug:
+            msg: "Account not registered in {{ certbot__server }}"
+          when: not _registered.stat.exists
+
+        - name: "Deploy certificate is not OK | Deploy | {{ _title_pfx }}"
+          ansible.builtin.set_fact:
+            _deploy_ok: false
 
     - name: "Test automatic certificate renewal | Deploy | {{ _title_pfx }}"
       ansible.builtin.shell:
         cmd: |
           certbot renew --dry-run
       register: _renew
-      when: (_standalone.rc == 0 or _standalone_csr.rc == 0 or _dns_provider.rc == 0 or _dns_provider_csr.rc == 0) and _registered.stat.exists
+      when: _deploy_ok and _registered.stat.exists
       changed_when: _renew.rc == 0
       failed_when: _renew.rc != 0

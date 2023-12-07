@@ -20,17 +20,17 @@
         state: directory
         mode: "0755"
 
-    - name: "Check required parameters | Deploy | {{ _title_pfx }}"
-      ansible.builtin.assert:
-        that:
-          - "{{ item }} | default('', true) | length > 0"
-        fail_msg: "Required parameter '{{ item }}' is not defined."
-        success_msg: "Required parameter '{{ item }}' is ok."
-        quiet: true
-      loop:
-        - certbot__domains
+    - name: "Check if account is registered | Init | {{ _title_pfx }}"
+      ansible.builtin.stat:
+        path: "/etc/letsencrypt/.registered"
+      register: _registered
 
-    - name: "Check required parameters with dns provider | Deploy | {{ _title_pfx }}"
+    - name: "Check if credentials of dns provider are defined | Init | {{ _title_pfx }}"
+      ansible.builtin.stat:
+        path: "{{ certbot__dir_credentials }}/{{ certbot__dns_provider | default('dnsimple', true) }}.ini"
+      register: _credentials
+
+    - name: "Check required parameters with dns provider | Init | {{ _title_pfx }}"
       ansible.builtin.assert:
         that:
           - "{{ item }} | default('', true) | length > 0"
@@ -39,4 +39,4 @@
         quiet: true
       loop:
         - certbot__dns_provider_token
-      when: certbot__dns_provider != "" and certbot__dns_provider != "standalone"
+      when: certbot__dns_provider != "" and certbot__dns_provider != "standalone" and not _credentials.stat.exists

@@ -19,6 +19,10 @@ certbot__key_path: /etc/letsencrypt/live
 certbot__fullchain_path: /etc/letsencrypt/live
 certbot__chain_path: /etc/letsencrypt/live
 
+# User and group to run certbot
+certbot__user: root
+certbot__group: root
+
 # Configutation for certificates
 certbot__key_type: ecdsa
 certbot__curve: secp384r1

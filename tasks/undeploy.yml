@@ -1,0 +1,29 @@
+---
+- name: "Undeploy certificate with Certbot | Undeploy | {{ _title_pfx }}"
+  become: true
+  tags: [never, undeploy]
+  block:
+    - name: "Header | Config | {{ _title_pfx }}"
+      ansible.builtin.debug:
+        msg: "---------------------------------- UNDEPLOY CERTIFICATE ----------------------------------"
+
+    - name: "Check required parameters | Undeploy | {{ _title_pfx }}"
+      ansible.builtin.assert:
+        that:
+          - "{{ item }} | default('', true) | length > 0"
+        fail_msg: "Required parameter '{{ item }}' is not defined."
+        success_msg: "Required parameter '{{ item }}' is ok."
+        quiet: true
+      loop:
+        - certbot__domains
+
+    - name: "Undeploy certificate with Certbot | Undeploy | {{ _title_pfx }}"
+      ansible.builtin.shell:
+        cmd: |
+          certbot revoke \
+          --cert-path {{ certbot__cert_path }}/{{ item }}/cert.pem \
+          --key-path {{ certbot__key_path }}/{{ item }}/privkey.pem \
+          --delete-after-revoke
+      loop: "{{ certbot__domains }}"
+      register: _undeploy_cert
+      changed_when: _undeploy_cert is changed

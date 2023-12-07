@@ -1,4 +1,4 @@
-# Contributing to the template-ansible
+# Contributing to the ansible-role-certbot
 
 Testers welcome!
 

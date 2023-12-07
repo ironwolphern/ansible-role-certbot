@@ -2,7 +2,7 @@
 Please delete options that are not relevant.
 
 - Fixes #
-- Issue/Addition to code, goes here.
+- Issue/Addition to code.
 
 ## Type of change
 
@@ -34,6 +34,6 @@ Please delete options that are not relevant.
 
 # Screenshots
 
-Original | Updated
-:----------------------:|:-----------:
-** original screenshot  | ** updated screenshot **
+| Original | Updated |
+|:------------------------:|:------------------------:|
+|** original screenshot ** | ** updated screenshot ** |

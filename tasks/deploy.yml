@@ -58,6 +58,7 @@
             mode: "0640"
             owner: "{{ certbot__user }}"
             group: "{{ certbot__group }}"
+          no_log: "{{ not certbot__debugger }}"
 
         - name: "Generate a (CSR) with private key generated | Deploy | {{ _title_pfx }}"
           community.crypto.openssl_csr:
@@ -70,6 +71,7 @@
             locality_name: "{{ certbot__tls_selfsigned_csr_locality }}"
             organizational_unit_name: "{{ certbot__tls_selfsigned_csr_ou }}"
             subject_alt_name: "{{ certbot__tls_selfsigned_csr_sans }}"
+          no_log: "{{ not certbot__debugger }}"
 
     - name: "Deploy certificate  | Deploy | {{ _title_pfx }}"
       when: _registered.stat.exists
@@ -90,6 +92,7 @@
               when: not certbot__tls_csr
               changed_when: _standalone.rc == 0
               failed_when: _standalone.rc != 0
+              no_log: "{{ not certbot__debugger }}"
 
             - name: "Deploy standalone certificate with (CSR) for domains with challenge (http-01) | Deploy | {{ _title_pfx }}"
               ansible.builtin.shell:
@@ -105,6 +108,7 @@
               when: certbot__tls_csr
               changed_when: _standalone_csr.rc == 0
               failed_when: _standalone_csr.rc != 0
+              no_log: "{{ not certbot__debugger }}"
 
         - name: "Deploy dns provider certificate with challenge (dns-01) | Deploy | {{ _title_pfx }}"
           when: certbot__dns_provider != "" and certbot__dns_provider != "standalone"
@@ -125,6 +129,7 @@
               when: not certbot__tls_csr
               changed_when: _dns_provider.rc == 0
               failed_when: _dns_provider.rc != 0
+              no_log: "{{ not certbot__debugger }}"
 
             - name: "Deploy dns provider certificate with (CSR) for domains with challenge (dns-01) | Deploy | {{ _title_pfx }}"
               ansible.builtin.shell:
@@ -143,6 +148,7 @@
               when: certbot__tls_csr
               changed_when: _dns_provider_csr.rc == 0
               failed_when: _dns_provider_csr.rc != 0
+              no_log: "{{ not certbot__debugger }}"
 
         - name: "Deploy certificate is OK | Deploy | {{ _title_pfx }}"
           ansible.builtin.set_fact:

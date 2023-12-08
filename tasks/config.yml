@@ -46,6 +46,7 @@
         mode: "0600"
         owner: "{{ certbot__user }}"
         group: "{{ certbot__group }}"
+      no_log: "{{ not certbot__debugger }}"
 
     - name: "Install plugin dns provider | Config | {{ _title_pfx }}"
       when: certbot__dns_provider != "" and certbot__dns_provider != "standalone"
@@ -77,3 +78,4 @@
             mode: "0600"
             owner: "{{ certbot__user }}"
             group: "{{ certbot__group }}"
+          no_log: "{{ not certbot__debugger }}"

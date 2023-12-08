@@ -45,7 +45,7 @@ certbot__tls_selfsigned_csr_sans: []
 certbot__tls_csr: false
 
 # Path to credentials file for DNS provider
-certbot__dir_credentials: "/etc/letsencrypt/.secrets"
+certbot__dns_provider_dir_credentials: "/etc/letsencrypt/.secrets"
 
 # The number of seconds to wait for DNS to propagate before asking the ACME server to verify the DNS record. (Default: 30)
 certbot__dns_provider_propagation_seconds: 30

@@ -27,7 +27,7 @@
 
     - name: "Check if credentials of dns provider are defined | Init | {{ _title_pfx }}"
       ansible.builtin.stat:
-        path: "{{ certbot__dir_credentials }}/{{ certbot__dns_provider | default('dnsimple', true) }}.ini"
+        path: "{{ certbot__dns_provider_dir_credentials }}/{{ certbot__dns_provider | default('dnsimple', true) }}.ini"
       register: _credentials
 
     - name: "Check required parameters with dns provider | Init | {{ _title_pfx }}"

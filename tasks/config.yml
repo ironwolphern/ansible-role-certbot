@@ -65,7 +65,7 @@
 
         - name: "Create credentials directory | Config | {{ _title_pfx }}"
           ansible.builtin.file:
-            path: "{{ certbot__dir_credentials }}"
+            path: "{{ certbot__dns_provider_dir_credentials }}"
             state: directory
             mode: "0600"
             owner: "{{ certbot__user }}"
@@ -74,7 +74,7 @@
         - name: "Create credentials file | Config | {{ _title_pfx }}"
           ansible.builtin.template:
             src: dns_credentials.ini.j2
-            dest: "{{ certbot__dir_credentials }}/{{ certbot__dns_provider | default('dnsimple', true) }}.ini"
+            dest: "{{ certbot__dns_provider_dir_credentials }}/{{ certbot__dns_provider | default('dnsimple', true) }}.ini"
             mode: "0600"
             owner: "{{ certbot__user }}"
             group: "{{ certbot__group }}"

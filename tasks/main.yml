@@ -22,6 +22,11 @@
         file: deploy.yml
       tags: [never, deploy]
 
+    - name: "Undeploy certificates | {{ _title_pfx }}"
+      ansible.builtin.import_tasks:
+        file: undeploy.yml
+      tags: [never, undeploy]
+
     - name: "Uninstall Cerbot | {{ _title_pfx }}"
       ansible.builtin.import_tasks:
         file: uninstall.yml

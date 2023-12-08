@@ -118,7 +118,7 @@
                 cmd: |
                   certbot certonly \
                   --dns-{{ certbot__dns_provider }} \
-                  --dns-{{ certbot__dns_provider }}-credentials {{ certbot__dir_credentials }}/{{ certbot__dns_provider }}.ini \
+                  --dns-{{ certbot__dns_provider }}-credentials {{ certbot__dns_provider_dir_credentials }}/{{ certbot__dns_provider }}.ini \
                   --dns-{{ certbot__dns_provider }}-propagation-seconds {{ certbot__dns_provider_propagation_seconds }} \
                   --cert-path {{ certbot__cert_path }} \
                   --key-path {{ certbot__key_path }} \
@@ -136,7 +136,7 @@
                 cmd: |
                   certbot certonly \
                   --dns-{{ certbot__dns_provider }} \
-                  --dns-{{ certbot__dns_provider }}-credentials {{ certbot__dir_credentials }}/{{ certbot__dns_provider }}.ini \
+                  --dns-{{ certbot__dns_provider }}-credentials {{ certbot__dns_provider_dir_credentials }}/{{ certbot__dns_provider }}.ini \
                   --dns-{{ certbot__dns_provider }}-propagation-seconds {{ certbot__dns_provider_propagation_seconds }} \
                   --csr {{ certbot__cert_path }}/csr.pem \
                   --cert-path {{ certbot__cert_path }} \

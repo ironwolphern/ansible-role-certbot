@@ -1,11 +1,11 @@
 ---
 name: Bug Report
-description: File a bug report
+description: Create a bug report to help us improve
 title: "[Bug]: "
 labels: ["bug", "triage"]
-projects: ["octo-org/1", "octo-org/44"]
+projects: ["ansible-role-certbot"]
 assignees:
-  - octocat
+  - ironwolphern
 body:
   - type: markdown
     attributes:
@@ -20,46 +20,127 @@ body:
     validations:
       required: false
   - type: textarea
-    id: what-happened
+    id: expected-behavior
     attributes:
-      label: What happened?
+      label: Expected Behavior
       description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you expect!
+      value: "A expected result!"
+    validations:
+      required: true
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior
+      description: Also tell us, what happen?
       placeholder: Tell us what you see!
       value: "A bug happened!"
     validations:
       required: true
-  - type: dropdown
-    id: version
+  - type: textarea
+    id: steps-to-reproduce
     attributes:
-      label: Version
-      description: What version of our software are you running?
-      options:
-        - 1.0.2 (Default)
-        - 1.0.3 (Edge)
-      default: 0
+      label: Steps to Reproduce the Problem
+      description: Also tell us, how can we reproduce this bug?
+      placeholder: Tell us how to reproduce!
+      value: |
+        1. Step 1
+        2. Step 2
+        3. Step 3
+        ...
     validations:
       required: true
-  - type: dropdown
-    id: browsers
+  - type: input
+    id: operating-system
     attributes:
-      label: What browsers are you seeing the problem on?
-      multiple: true
-      options:
-        - Firefox
-        - Chrome
-        - Safari
-        - Microsoft Edge
+      label: Operating System
+      description: What operating system are you using?
+      placeholder: ex. Ubuntu 18.04
+    validations:
+      required: false
+  - type: input
+    id: ansible-version
+    attributes:
+      label: Ansible Version
+      description: What version of Ansible are you using?
+      placeholder: ex. 2.8.0
+    validations:
+      required: false
+  - type: textarea
+    id: collections-and-libraries
+    attributes:
+      label: Collections and Libraries with Versions
+      description: What collections and libraries are you using with versions?
+      placeholder: ex. ansible.posix 1.2.0
+    validations:
+      required: false
+  - type: textarea
+    id: variables
+    attributes:
+      label: Variables Used
+      description: What variables are you using?
+      placeholder: "ex. certbot_email:"
+      value: |
+        certbot_email:
+        certbot_domains:
+        ...
+    validations:
+      required: true
+  - type: textarea
+    id: inventory
+    attributes:
+      label: Inventory
+      description: What does your inventory look like?
+      placeholder: inventory
+      value: |
+        [all]
+        ...
+        [certbot]
+        ...
+    validations:
+      required: true
   - type: textarea
     id: logs
     attributes:
       label: Relevant log output
       description: Please copy and paste any relevant log output. This will be automatically formatted into code.
       render: shell
+    validations:
+      required: false
+  - type: textarea
+    id: solution
+    attributes:
+      label: Possible Solution
+      description: If you have a possible solution, please describe it.
+      placeholder: Tell us your solution!
+      value: A possible solution!
+    validations:
+      required: false
+  - type: textarea
+    id: details
+    attributes:
+      label: Detailed Description
+      description: Please provide a detailed description of the bug.
+      placeholder: Tell us more!
+      value: A detailed description!
+    validations:
+      required: false
+  - type: textarea
+    id: implementation
+    attributes:
+      label: Possible Implementation
+      description: If you have a possible implementation, please describe it.
+      placeholder: Tell us your implementation!
+      value: A possible implementation!
+    validations:
+      required: false
   - type: checkboxes
     id: terms
     attributes:
       label: Code of Conduct
-      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com)
+      description: |
+        By submitting this issue,
+        you agree to follow our [Code of Conduct](https://github.com/ironwolphern/ansible-role-certbot/blob/master/CODE_OF_CONDUCT.md)
       options:
         - label: I agree to follow this project's Code of Conduct
           required: true

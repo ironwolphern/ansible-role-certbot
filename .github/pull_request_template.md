@@ -35,5 +35,5 @@ Please delete options that are not relevant.
 # Screenshots
 
 | Original | Updated |
-|:------------------------:|:------------------------:|
-|** original screenshot ** | ** updated screenshot ** |
+|:-------------------------:|:------------------------:|
+| ** original screenshot ** | ** updated screenshot ** |

@@ -1,5 +1,3 @@
-:construction: ***DEVELOPING*** :construction:
-
 **Ansible Role Certbot**
 ========================
 

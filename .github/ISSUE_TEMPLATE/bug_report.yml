@@ -12,9 +12,17 @@ body:
       value: |
         Thanks for taking the time to fill out this bug report!
   - type: input
-    id: contact
+    id: contact-name
     attributes:
-      label: Contact Details
+      label: Contact Name
+      description: What is your name?
+      placeholder: ex. John Doe
+    validations:
+      required: false
+  - type: input
+    id: contact-email
+    attributes:
+      label: Contact Email
       description: How can we get in touch with you if we need more info?
       placeholder: ex. email@example.com
     validations:

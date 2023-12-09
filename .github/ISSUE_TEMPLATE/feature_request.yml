@@ -7,6 +7,22 @@ projects: ["ansible-role-certbot"]
 assignees:
   - ironwolphern
 body:
+  - type: input
+    id: contact-name
+    attributes:
+      label: Contact Name
+      description: What is your name?
+      placeholder: ex. John Doe
+    validations:
+      required: false
+  - type: input
+    id: contact-email
+    attributes:
+      label: Contact Email
+      description: How can we get in touch with you if we need more info?
+      placeholder: ex. email@example.com
+    validations:
+      required: false
   - type: textarea
     attributes:
       label: Is your feature request related to a problem? Please describe.

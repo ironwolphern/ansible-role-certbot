@@ -3,7 +3,6 @@
   hosts: certbot
   gather_facts: true
 
-  tasks:
   roles:
     - role: ansible-role-certbot
       vars:

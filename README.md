@@ -2,10 +2,11 @@
 ========================
 
 ![Ansible](https://img.shields.io/badge/ansible-%231A1918.svg?style=flat&logo=ansible&logoColor=white)
-![License](https://badgen.net/github/license/ironwolphern/ansible-role-certbot)
-![Release](https://badgen.net/github/release/ironwolphern/ansible-role-certbot)
-![PRs](https://badgen.net/github/prs/ironwolphern/ansible-role-certbot)
-![Issues](https://badgen.net/github/issues/ironwolphern/ansible-role-certbot)
+![GitHub License](https://img.shields.io/github/license/ironwolphern/ansible-role-certbot)
+![GitHub release (with filter)](https://img.shields.io/github/v/release/ironwolphern/ansible-role-certbot)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/ironwolphern/ansible-role-certbot)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/ironwolphern/ansible-role-certbot)
+![GitHub issues](https://img.shields.io/github/issues/ironwolphern/ansible-role-certbot)
 [![Ansible Lint](https://github.com/ironwolphern/ansible-role-certbot/actions/workflows/ansible-lint.yml/badge.svg)](https://github.com/ironwolphern/ansible-role-certbot/actions/workflows/ansible-lint.yml)
 ![Dependabot](https://badgen.net/github/dependabot/ironwolphern/ansible-role-certbot)
 

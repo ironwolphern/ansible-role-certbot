@@ -17,7 +17,7 @@ For the official documentation for more options visit the website: https://certb
 *Requirements*
 --------------
 
-This role need the snap installer, if not installed in your OS, the role will install it. Some modules in  role tasks need to be use with an ansible collection ***community.general*** for install and use snap and ***community.crypto*** for create a private key and csr to deploy certificate with custom data.
+This role need the snap installer, if not installed in your OS, the role will install it. Some modules in role tasks need to be use with an ansible collection ***community.general*** for install and use snap and ***community.crypto*** for create a private key and csr to deploy certificate with custom data.
 
 You can install this collections with requirements file:
 ```shell

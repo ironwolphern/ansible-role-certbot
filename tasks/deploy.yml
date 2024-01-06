@@ -1,7 +1,7 @@
 ---
 - name: "Install certificate with Certbot | Deploy | {{ _title_pfx }}"
   become: true
-  tags: [never, deploy]
+  tags: [deploy, update]
   block:
     - name: "Header | Deploy | {{ _title_pfx }}"
       ansible.builtin.debug:

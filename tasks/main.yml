@@ -20,7 +20,7 @@
     - name: "Deploy certificates | {{ _title_pfx }}"
       ansible.builtin.import_tasks:
         file: deploy.yml
-      tags: [never, deploy]
+      tags: [deploy, update]
 
     - name: "Undeploy certificates | {{ _title_pfx }}"
       ansible.builtin.import_tasks:

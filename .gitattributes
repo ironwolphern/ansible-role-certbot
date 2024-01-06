@@ -1,0 +1,5 @@
+# adding github settings to show correct language
+*.json linguist-detectable=true
+*.yml linguist-detectable=true
+*.j2 linguist-detectable=true
+*.md linguist-documentation

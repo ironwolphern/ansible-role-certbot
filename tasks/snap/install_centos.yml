@@ -3,18 +3,18 @@
   become: true
   block:
     - name: "Install EPEL repository | Install CentOS | Install | {{ _title_pfx }}"
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         name: epel-release
         state: present
 
     - name: "Refresh yum cache and update all packages | Install CentOS | Install | {{ _title_pfx }}"
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         name: "*"
         state: present
         update_cache: true
 
     - name: "Install snapd | Install CentOS | Install | {{ _title_pfx }}"
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         name: snapd
         state: present
 
